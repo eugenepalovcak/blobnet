@@ -58,6 +58,9 @@ class ProteinDataset(Dataset):
         return data
 
 
+
+
+
 if __name__=="__main__":
     D = ProteinDataset("./dompdb")
     loader = DataLoader(D, batch_size=16)
