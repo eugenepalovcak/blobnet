@@ -51,6 +51,20 @@ class ProteinDataset(Dataset):
         data-loading that is necessary """
         return pdb2pc(self.pdb_files[idx])
 
+def get_loaders(triplet_file, pdb_dir, batch_size):
+    """ Gets anchor, positive, and negative data loader """
+    
+    with open(triplet_file, "r") as f:
+        triplets = [[os.path.join(pdb_dir, pdb)
+                     for pdb in line.strip().split(",")]
+                     for line in f.readlines()]
+    
+    anchors, positives, negatives = [DataLoader(ProteinDataset(list(t)),
+                                     batch_size=batch_size)
+                                     for t in zip(*triplets)]
+
+    return anchors, positives, negatives
+
 
 if __name__=="__main__":
     """ Basic method for iterating over training triplets """
@@ -58,14 +72,7 @@ if __name__=="__main__":
     pdb_dir = "./dompdb"
     batch_size = 8
 
-    with open(triplet_file, "r") as f:
-        triplets = [[os.path.join(pdb_dir, pdb)
-                     for pdb in line.strip().split(",")]
-                     for line in f.readlines()]
-
-    anch, pos, neg = [DataLoader(ProteinDataset(list(t)),
-                                 batch_size=batch_size)
-                                 for t in zip(*triplets)] 
+    anch, pos, neg = get_loaders(triplet_file, pdb_dir, batch_size) 
 
     for a,p,n in zip(anch,pos,neg):
         print(a,p,n)
