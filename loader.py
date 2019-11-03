@@ -22,11 +22,6 @@ from torch_geometric.data import DataLoader
 from torch.utils.data import Dataset
 from torch_geometric.data import Data
 from prody import parsePDB
-
-from scipy.spatial.distance import squareform
-from scipy.spatial.distance import pdist
-
-import glob
 import os
 
 def pdb2pc(pdb_file):
